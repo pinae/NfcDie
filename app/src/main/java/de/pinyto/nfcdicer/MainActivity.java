@@ -1,9 +1,15 @@
 package de.pinyto.nfcdicer;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +39,49 @@ public class MainActivity extends AppCompatActivity {
         handleIntent(getIntent());
     }
 
-    private void handleIntent(Intent intent) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupForegroundDispatch(this, nfcAdapter);
+    }
 
+    @Override
+    protected void onPause() {
+        stopForegroundDispatch(this, nfcAdapter);
+        super.onPause();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        String action = intent.getAction();
+        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action) ||
+                NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            tagIdView.setText(Hextools.bytesToHex(tag.getId()));
+        }
+    }
+
+    public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+        final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        final PendingIntent pendingIntent = PendingIntent.getActivity(
+                activity.getApplicationContext(), 0, intent, 0);
+
+        IntentFilter[] filters = new IntentFilter[1];
+        String[][] techList = new String[][]{};
+        filters[0] = new IntentFilter();
+        filters[0].addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
+        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
+
+        adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
+    }
+
+    public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
+        adapter.disableForegroundDispatch(activity);
     }
 }
