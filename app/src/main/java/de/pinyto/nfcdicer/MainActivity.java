@@ -6,10 +6,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,7 +68,41 @@ public class MainActivity extends AppCompatActivity {
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action) ||
                 NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            tagIdView.setText(Hextools.bytesToHex(tag.getId()));
+            byte[] id = tag.getId();
+            writeRandomBytes(Arrays.copyOfRange(id, 1, id.length));
+
+            tagIdView.setText(Hextools.bytesToHex(Arrays.copyOfRange(id, 1, id.length)));
+        }
+    }
+
+    private void writeRandomBytes(byte[] data) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            File file = new File(this.getBaseContext().getExternalFilesDir(null), "");
+            if (!file.mkdirs() && !file.isDirectory()) {
+                Log.e("directory error", "Could not create the directory.");
+            }
+            file = new File(this.getBaseContext().getExternalFilesDir(null), "NfcRandom");
+            if (!file.exists()) {
+                try {
+                    if (!file.createNewFile()) {
+                        Log.e("write error", "Could not write to sd card.");
+                    }
+                } catch (IOException writeError) {
+                    writeError.printStackTrace();
+                }
+            }
+            try {
+                FileOutputStream f = new FileOutputStream(file, true);
+                try {
+                    f.write(data);
+                } catch (IOException writeError) {
+                    writeError.printStackTrace();
+                } finally {
+                    f.close();
+                }
+            } catch (IOException fileError) {
+                fileError.printStackTrace();
+            }
         }
     }
 
