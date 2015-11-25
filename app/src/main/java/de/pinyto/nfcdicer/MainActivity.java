@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,6 +71,32 @@ public class MainActivity extends AppCompatActivity {
             writeRandomBytes(Arrays.copyOfRange(id, 1, id.length));
 
             tagIdView.setText(Hextools.bytesToHex(Arrays.copyOfRange(id, 1, id.length)));
+
+            int randomNumber = (id[1] + 128) * 255 * 255 + (id[2] + 128) * 255 + (id[3] + 128);
+            ImageView die = (ImageView) findViewById(R.id.imageViewDie);
+            switch (randomNumber % 6) {
+                case 0:
+                    die.setImageResource(R.drawable.d1);
+                    break;
+                case 1:
+                    die.setImageResource(R.drawable.d2);
+                    break;
+                case 2:
+                    die.setImageResource(R.drawable.d3);
+                    break;
+                case 3:
+                    die.setImageResource(R.drawable.d4);
+                    break;
+                case 4:
+                    die.setImageResource(R.drawable.d5);
+                    break;
+                case 5:
+                    die.setImageResource(R.drawable.d6);
+                    break;
+                default:
+                    die.setImageResource(0);
+                    break;
+            }
         }
     }
 
