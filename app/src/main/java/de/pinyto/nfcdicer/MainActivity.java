@@ -71,8 +71,7 @@ public class MainActivity extends AppCompatActivity {
             writeRandomBytes(Arrays.copyOfRange(id, 1, id.length));
 
             tagIdView.setText(Hextools.bytesToHex(Arrays.copyOfRange(id, 1, id.length)));
-
-            int randomNumber = (id[1] + 128) * 255 * 255 + (id[2] + 128) * 255 + (id[3] + 128);
+            int randomNumber = ((id[1] + 128) << 16) + ((id[2] + 128) << 8) + (id[3] + 128);
             ImageView die = (ImageView) findViewById(R.id.imageViewDie);
             switch (randomNumber % 6) {
                 case 0:
