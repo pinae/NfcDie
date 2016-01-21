@@ -137,11 +137,11 @@ public class MainActivity extends AppCompatActivity {
         final PendingIntent pendingIntent = PendingIntent.getActivity(
                 activity.getApplicationContext(), 0, intent, 0);
 
-        IntentFilter[] filters = new IntentFilter[1];
         String[][] techList = new String[][]{};
-        filters[0] = new IntentFilter();
-        filters[0].addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
-        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        IntentFilter[] filters = {filter};
 
         adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
     }
