@@ -1,4 +1,4 @@
-package de.pinyto.nfcdicer;
+package de.pinyto.nfcdie;
 
 /**
  * This is a utility class for outputting and reading hex encoded bytes.

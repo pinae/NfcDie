@@ -1,4 +1,4 @@
-package de.pinyto.nfcdicer;
+package de.pinyto.nfcdie;
 
 import android.app.Activity;
 import android.app.PendingIntent;

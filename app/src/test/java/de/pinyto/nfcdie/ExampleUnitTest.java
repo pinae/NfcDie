@@ -1,4 +1,4 @@
-package de.pinyto.nfcdicer;
+package de.pinyto.nfcdie;
 
 import org.junit.Test;
 
