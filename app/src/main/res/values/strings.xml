@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NfcDicer</string>
+    <string name="app_name">NfcDie</string>
     <string name="no_tag">No NFC Tag</string>
     <string name="nfc_disabled">NFC is disabled.</string>
 </resources>
